@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from scalar_fastapi import get_scalar_api_reference
 from pydantic import BaseModel, Field
 from typing import Optional, List
 from datetime import datetime
@@ -76,8 +77,18 @@ class TroubleTicket(BaseModel):
 app = FastAPI(
     title="TMF621 Trouble Ticket API",
     description="Workshop implementation of TM Forum TMF621 Trouble Ticket Management API",
-    version="5.0.1"
+    version="5.0.1",
+    docs_url=None,  # Disable default Swagger UI
+    redoc_url=None  # Disable ReDoc
 )
+
+# Add Scalar API documentation
+@app.get("/docs", include_in_schema=False)
+async def scalar_html():
+    return get_scalar_api_reference(
+        openapi_url=app.openapi_url,
+        title=app.title,
+    )
 
 # CORS for Postman
 app.add_middleware(
@@ -101,6 +112,7 @@ async def root():
     return {
         "message": "TMF621 Trouble Ticket API - Workshop Edition",
         "version": "5.0.1",
+        "documentation": "/docs (Scalar API Reference)",
         "endpoints": {
             "List tickets": "GET /tmf-api/troubleTicket/v5/troubleTicket",
             "Create ticket": "POST /tmf-api/troubleTicket/v5/troubleTicket",

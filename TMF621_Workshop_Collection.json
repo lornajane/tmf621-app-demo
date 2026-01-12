@@ -7,7 +7,7 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": "https://your-app.railway.app",
+      "value": "https://web-production-1651.up.railway.app/",
       "type": "string"
     },
     {
